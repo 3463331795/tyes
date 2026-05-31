@@ -1,0 +1,31 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/Debug/prj_jlinktest_f411ve.elf", //修改成你的elf文件路径
+            "name": "DebugTest",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",                                    
+            "configFiles": [
+                "interface/cmsis-dap.cfg",                                     //选择调试器
+                "target/stm32f4x.cfg"                                          //选择芯片型号             
+            ],
+            "serverpath": "G:/Tools/MSYS2/ucrt64/bin/openocd.exe",
+            "searchDir": [
+                "G:/Tools/MSYS2/ucrt64/share/openocd/scripts"
+            ],
+            "runToEntryPoint": "main",
+            "showDevDebugOutput": "none",
+            "gdbPath": "C:/Users/WuJiangNan/AppData/Local/stm32cube/bundles/gnu-tools-for-stm32/14.3.1+st.2/bin/arm-none-eabi-gdb.exe",
+            "liveWatch": {
+                "enabled": true,
+                "samplesPerSecond": 4                                          //修改成你需要的刷新频率，越大越快
+            }
+        },
+    ]
+}

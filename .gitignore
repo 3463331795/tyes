@@ -1,0 +1,9 @@
+
+.settings/
+build/
+Drivers/
+Middlewares/
+LVGL/demos
+LVGL/examples
+LVGL/src
+
