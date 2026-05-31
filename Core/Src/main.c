@@ -235,6 +235,7 @@ static void LCD_ColorFillSolid(uint16_t xsta, uint16_t ysta, uint16_t xend, uint
         {
         }
     }
+       
 }
 
 // 简单颜色切换演示
