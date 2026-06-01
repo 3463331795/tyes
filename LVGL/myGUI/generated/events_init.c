@@ -11,20 +11,21 @@
 #include <stdio.h>
 #include "lvgl.h"
 #include "stm32f4xx_hal.h"
-
+#include "stm32f4xx_hal_gpio.h"
 #if LV_USE_GUIDER_SIMULATOR && LV_USE_FREEMASTER
-#include "freemaster_client.h"
+
+
 #endif
 
 
-static void screen_btn_1_event_handler (lv_event_t *e)
+static void page_1_btn_1_event_handler (lv_event_t *e)
 {
     lv_event_code_t code = lv_event_get_code(e);
     switch (code) {
     case LV_EVENT_CLICKED:
     {
-        lv_label_set_text(guider_ui.screen_label_1, "LED1亮");
-        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13); // 切换 LED1 的状态
+        lv_label_set_text(guider_ui.page_1_label_1, "LED1亮");
+        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
         break;
     }
     default:
@@ -32,13 +33,13 @@ static void screen_btn_1_event_handler (lv_event_t *e)
     }
 }
 
-static void screen_btn_2_event_handler (lv_event_t *e)
+static void page_1_btn_2_event_handler (lv_event_t *e)
 {
     lv_event_code_t code = lv_event_get_code(e);
     switch (code) {
     case LV_EVENT_CLICKED:
     {
-        lv_label_set_text(guider_ui.screen_label_1, "LED2亮");
+        ui_load_scr_animation(&guider_ui, &guider_ui.page_2, guider_ui.page_2_del, &guider_ui.page_1_del, setup_scr_page_2, LV_SCR_LOAD_ANIM_OVER_LEFT, 200, 200, true, false);
         break;
     }
     default:
@@ -46,10 +47,29 @@ static void screen_btn_2_event_handler (lv_event_t *e)
     }
 }
 
-void events_init_screen (lv_ui *ui)
+void events_init_page_1 (lv_ui *ui)
 {
-    lv_obj_add_event_cb(ui->screen_btn_1, screen_btn_1_event_handler, LV_EVENT_ALL, ui);
-    lv_obj_add_event_cb(ui->screen_btn_2, screen_btn_2_event_handler, LV_EVENT_ALL, ui);
+    lv_obj_add_event_cb(ui->page_1_btn_1, page_1_btn_1_event_handler, LV_EVENT_ALL, ui);
+    lv_obj_add_event_cb(ui->page_1_btn_2, page_1_btn_2_event_handler, LV_EVENT_ALL, ui);
+}
+
+static void page_2_btn_1_event_handler (lv_event_t *e)
+{
+    lv_event_code_t code = lv_event_get_code(e);
+    switch (code) {
+    case LV_EVENT_CLICKED:
+    {
+        ui_load_scr_animation(&guider_ui, &guider_ui.page_1, guider_ui.page_1_del, &guider_ui.page_2_del, setup_scr_page_1, LV_SCR_LOAD_ANIM_OVER_RIGHT, 200, 200, true, false);
+        break;
+    }
+    default:
+        break;
+    }
+}
+
+void events_init_page_2 (lv_ui *ui)
+{
+    lv_obj_add_event_cb(ui->page_2_btn_1, page_2_btn_1_event_handler, LV_EVENT_ALL, ui);
 }
 
 
