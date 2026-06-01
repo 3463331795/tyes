@@ -252,6 +252,8 @@ void LCD_ColorCycleDemo(void)
 
         LCD_ShowString(60, 100, (uint8_t *)names[i], fc, bg, 24, 0);
         HAL_Delay(800);
+
+        
     }
 }
 
