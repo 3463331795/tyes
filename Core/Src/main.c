@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "cmsis_os.h"
 #include "dma.h"
 #include "spi.h"
 #include "tim.h"
@@ -52,6 +53,7 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -115,37 +117,49 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM11_Init();
   /* USER CODE BEGIN 2 */
-  delay_init();
-  LCD_Init();
-  LCD_Set_Light(dc); // 亮度拉到最满
-  LCD_Open_Light();   // 启动背光 PWM 
+  // ===================== LCD屏幕 初始化 =======================
+  // delay_init();
+  // LCD_Init();
+  // LCD_Set_Light(dc); // 亮度拉到最满
+  // LCD_Open_Light();   // 启动背光 PWM 
 
-  CST816_Init();    //触摸屏
+  // CST816_Init();    //触摸屏
 
   // ===================== LVGL 初始化 =======================
-  lv_init();          // LVGL 初始化
-  lv_port_disp_init(); // LVGL 显示驱动初始化
-  lv_port_indev_init(); // LVGL 输入设备驱动初始化
-  HAL_TIM_Base_Start_IT(&htim11); // 启动 LVGL 定时器中断
+  
+  // lv_init();          // LVGL 初始化
+  // lv_port_disp_init(); // LVGL 显示驱动初始化
+  // lv_port_indev_init(); // LVGL 输入设备驱动初始化
+  // HAL_TIM_Base_Start_IT(&htim11); // 启动 LVGL 定时器中断
 
   // ===================== 自定义图形 初始化 =======================
-  setup_ui(&guider_ui); // Gui Guider 生成的界面和控件的初始化
-  events_init(&guider_ui); // Gui Guider 生成的事件、回调函数的初始化
+  // setup_ui(&guider_ui); // Gui Guider 生成的界面和控件的初始化
+  // events_init(&guider_ui); // Gui Guider 生成的事件、回调函数的初始化
   /* USER CODE END 2 */
+
+  /* Init scheduler */
+  osKernelInitialize();  /* Call init function for freertos objects (in cmsis_os2.c) */
+  MX_FREERTOS_Init();
+
+  /* Start scheduler */
+  osKernelStart();
+
+  /* We should never get here as control is now taken by the scheduler */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
     //LCD_ColorCycleDemo();
-    
-    HAL_Delay(1-1);
+    // ===================== 图形化 任务 =======================  
+    // HAL_Delay(1-1);
 
-    static uint8_t msLVGL = 0;
-    if(msLVGL++ >= 5) { // 每 5ms 调用一次 lv_task_handler，处理 LVGL 的任务
-        msLVGL = 0;
-        lv_task_handler();
-    }
+    // static uint8_t msLVGL = 0;
+    // if(msLVGL++ >= 5) { // 每 5ms 调用一次 lv_task_handler，处理 LVGL 的任务
+    //     msLVGL = 0;
+    //     lv_task_handler();
+    // }
+    // ===================== 图形化 任务 =======================  
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -276,11 +290,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   if (htim->Instance == TIM1)
   {
     HAL_IncTick();
-  }
-  else if(htim->Instance == TIM11) // LVGL 定时器中断
-  {
-      lv_tick_inc(1); // 每 1ms 增加 LVGL 的系统时间
-      // 这里可以添加其他需要在定时器中处理的任务
   }
   /* USER CODE BEGIN Callback 1 */
 
