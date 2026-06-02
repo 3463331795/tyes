@@ -284,7 +284,7 @@ void Task_H_Func(void *argument)
     //osSemaphoreAcquire(BinarySem01Handle, osWaitForever);
     osMutexAcquire(Mutex01Handle, osWaitForever);
     printf("High Task get mutex, start\r\n");
-    osDelay(1000);
+    HAL_Delay(1000);
     printf("High Task give mutex, end\r\n");
     //osSemaphoreRelease(BinarySem01Handle);
     osMutexRelease(Mutex01Handle);
@@ -329,7 +329,7 @@ void Task_L_Func(void *argument)
     osMutexAcquire(Mutex01Handle, osWaitForever);
     printf("Low Task get mutex, start\r\n");
     //HAL_Delay(5000);
-    osDelay(3000);
+    HAL_Delay(3000);
     printf("Low Task give mutex, end\r\n");
     //osSemaphoreRelease(BinarySem01Handle);
     osMutexRelease(Mutex01Handle);
