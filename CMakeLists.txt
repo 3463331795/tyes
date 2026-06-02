@@ -51,6 +51,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
 # 方法一：收集 custom 目录下的所有 .c 文件（推荐使用 CONFIGURE_DEPENDS）
 file(GLOB_RECURSE MY_SOURCES CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/User/LCD/*.c
+    ${CMAKE_SOURCE_DIR}/User/KEY/*.c
+    ${CMAKE_SOURCE_DIR}/User/Task/*.c
     ${CMAKE_SOURCE_DIR}/LVGL/*.c  
     ${CMAKE_SOURCE_DIR}/LVGL/examples/porting/*.c
     ${CMAKE_SOURCE_DIR}/LVGL/src/*.c
@@ -73,6 +75,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/User
     ${CMAKE_SOURCE_DIR}/User/LCD
+    ${CMAKE_SOURCE_DIR}/User/KEY
+    ${CMAKE_SOURCE_DIR}/User/Task
     ${CMAKE_SOURCE_DIR}/LVGL    
     ${CMAKE_SOURCE_DIR}/LVGL/examples/porting
     ${CMAKE_SOURCE_DIR}/LVGL/src

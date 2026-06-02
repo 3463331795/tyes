@@ -1,5 +1,6 @@
 #include "delay.h"
 
+
  #define SYS_CLK 		100
 /* 
 //roughly delay

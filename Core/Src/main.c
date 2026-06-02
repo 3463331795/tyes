@@ -63,20 +63,26 @@ void MX_FREERTOS_Init(void);
 #include "stdio.h"
 #include "test.h"
 #include "delay.h"
+
+
+// ===================== 按键驱动相关头文件 =======================
+#include "key.h"
+
+// ===================== LCD驱动相关头文件 =======================
 #include "lcd_init.h"
 #include "lcd.h"
 #include "cst816.h"
 
 // ===================== LVGL驱动相关头文件 =======================
-#include "lvgl.h"
-#include "lv_port_disp.h"
-#include "lv_port_indev.h"
+// #include "lvgl.h"
+// #include "lv_port_disp.h"
+// #include "lv_port_indev.h"
 
 // ===================== 自定义图形驱动相关头文件 =======================
-#include "gui_guider.h"           // Gui Guider 生成的界面和控件的声明
-#include "events_init.h"          // Gui Guider 生成的初始化事件、回调函数
-lv_ui  guider_ui;                     // 声明 界面对象
-uint8_t dc=100;
+// #include "gui_guider.h"           // Gui Guider 生成的界面和控件的声明
+// #include "events_init.h"          // Gui Guider 生成的初始化事件、回调函数
+// lv_ui  guider_ui;                     // 声明 界面对象
+
 
 void LCD_ColorCycleDemo(void);
 
@@ -117,13 +123,15 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM11_Init();
   /* USER CODE BEGIN 2 */
+  // ===================== 按键 初始化 =======================
+  Key_Port_Init();
   // ===================== LCD屏幕 初始化 =======================
-  // delay_init();
-  // LCD_Init();
-  // LCD_Set_Light(dc); // 亮度拉到最满
-  // LCD_Open_Light();   // 启动背光 PWM 
+  delay_init();
+  LCD_Init();
+  LCD_Set_Light(100); // 亮度拉到最满
+  LCD_Open_Light();   // 启动背光 PWM 
 
-  // CST816_Init();    //触摸屏
+  CST816_Init();    //触摸屏
 
   // ===================== LVGL 初始化 =======================
   

@@ -52,30 +52,35 @@ osThreadId_t defaultTaskHandle;
 const osThreadAttr_t defaultTask_attributes = {
   .name = "defaultTask",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityLow,
+  .priority = (osPriority_t) osPriorityNormal,
 };
-
-
-
-/* Private function prototypes -----------------------------------------------*/
-/* USER CODE BEGIN FunctionPrototypes */
-osThreadId_t LED_TaskHandle;
-const osThreadAttr_t LED_Task_attributes = {
-  .name = "LED_Task",
+/* Definitions for key_task */
+osThreadId_t key_taskHandle;
+const osThreadAttr_t key_task_attributes = {
+  .name = "key_task",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow1,
 };
-
+/* Definitions for Log_Task */
 osThreadId_t Log_TaskHandle;
 const osThreadAttr_t Log_Task_attributes = {
   .name = "Log_Task",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow1,
 };
+/* Definitions for KeyBinarySem01 */
+osSemaphoreId_t KeyBinarySem01Handle;
+const osSemaphoreAttr_t KeyBinarySem01_attributes = {
+  .name = "KeyBinarySem01"
+};
+
+/* Private function prototypes -----------------------------------------------*/
+/* USER CODE BEGIN FunctionPrototypes */
+
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void *argument);
-void LedTaskFunc(void *argument);
+void KeyTaskFunc(void *argument);
 void LogTaskFunc(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -94,6 +99,10 @@ void MX_FREERTOS_Init(void) {
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
 
+  /* Create the semaphores(s) */
+  /* creation of KeyBinarySem01 */
+  KeyBinarySem01Handle = osSemaphoreNew(1, 1, &KeyBinarySem01_attributes);
+
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
@@ -109,7 +118,11 @@ void MX_FREERTOS_Init(void) {
   /* Create the thread(s) */
   /* creation of defaultTask */
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
-  LED_TaskHandle  = osThreadNew(LedTaskFunc, NULL, &LED_Task_attributes);
+
+  /* creation of key_task */
+  key_taskHandle = osThreadNew(KeyTaskFunc, NULL, &key_task_attributes);
+
+  /* creation of Log_Task */
   Log_TaskHandle = osThreadNew(LogTaskFunc, NULL, &Log_Task_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -135,39 +148,52 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13); 
-    osDelay(1000);
+    //HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13); 
+    osDelay(1);
   }
   /* USER CODE END StartDefaultTask */
+}
+
+/* USER CODE BEGIN Header_KeyTaskFunc */
+/**
+* @brief Function implementing the key_task thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_KeyTaskFunc */
+__weak void KeyTaskFunc(void *argument)
+{
+  /* USER CODE BEGIN KeyTaskFunc */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END KeyTaskFunc */
+}
+
+/* USER CODE BEGIN Header_LogTaskFunc */
+/**
+* @brief Function implementing the Log_Task thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_LogTaskFunc */
+__weak void LogTaskFunc(void *argument)
+{
+  /* USER CODE BEGIN LogTaskFunc */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END LogTaskFunc */
 }
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
 
-void LedTaskFunc(void *argument)
-{
-  /* USER CODE BEGIN StartDefaultTask */
-  /* Infinite loop */
-  for(;;)
-  {
-    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13); 
-    osDelay(100);
-  }
-  /* USER CODE END StartDefaultTask */
-}
 
-
-void LogTaskFunc(void *argument)
-{
-  /* USER CODE BEGIN StartDefaultTask */
-  /* Infinite loop */
-  for(;;)
-  {
-    printf("this is log task\r\n"); 
-    osDelay(500);
-  }
-  /* USER CODE END StartDefaultTask */
-}
 
 /* USER CODE END Application */
 
